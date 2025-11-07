@@ -61,7 +61,7 @@ def getAnswerWithAnalysis(request: ChatRequest):
     for news in news_list:
         url = news["url"]
         print("크롤링 시작", flush=True)
-        result = batchCrawler.crawl(url, max_wait=3)
+        result = batchCrawler.crawl(url)
         print("크롤링 완료", flush=True)
         resultDict[url] = {
             "content" : result,
@@ -75,10 +75,4 @@ def getAnswerWithAnalysis(request: ChatRequest):
 # 일반 질문 답변
 def getAnswerWithoutAnalysis(question : str):
     return simpleAnswer(question)
-
-@app.post("/test")
-def test():
-    batchCrawler = BatchCrawler(headless=True)
-    return batchCrawler.crawl("https://coincu.com/340931-sec-reviews-ethereum-solana-etfs/?utm_source=snapi")
-
 

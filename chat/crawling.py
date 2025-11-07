@@ -186,10 +186,10 @@ def crawl_with_driver(driver, url, max_wait=10):
     메인 함수
 """
 # ===== 단일 URL 크롤링 =====
-def crawl(url, headless=True, proxy=None, max_wait=5):
+def crawl(url, headless=True, proxy=None):
     driver = get_driver(headless=headless, proxy=proxy)
     try:
-        return crawl_with_driver(driver, url, max_wait=max_wait)
+        return crawl_with_driver(driver, url)
     finally:
         driver.quit()
 
@@ -200,8 +200,8 @@ class BatchCrawler:
     def __init__(self, headless=True, proxy=None):
         self.driver = get_driver(headless=headless, proxy=proxy)
     
-    def crawl(self, url, max_wait=5):
-        return crawl_with_driver(self.driver, url, max_wait=max_wait)
+    def crawl(self, url):
+        return crawl_with_driver(self.driver, url)
     
     def close(self):
         try:
