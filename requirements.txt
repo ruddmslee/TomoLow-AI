@@ -4,3 +4,13 @@ openai
 pydantic
 python-dotenv
 numpy
+requests
+firecrawl
+playwright
+playwright_stealth
+selenium
+selenium-stealth
+webdriver_manager
+undetected_chromedriver
+readability-lxml
+beautifulsoup4
