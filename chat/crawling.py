@@ -109,7 +109,7 @@ def has_cloudflare_challenge(page_source):
 """
     특정 url 크롤링
 """
-def crawl_with_driver(driver, url, max_wait=10):
+def crawl_with_driver(driver, url, max_wait=5):
     try:
         driver.set_page_load_timeout(max_wait)
         driver.get(url)

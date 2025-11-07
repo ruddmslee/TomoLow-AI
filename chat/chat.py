@@ -3,7 +3,7 @@ from openai import OpenAI
 import os, time
 from dotenv import load_dotenv
 from chat.get_news import getNews
-from chat.crawling import BatchCrawler
+from chat.crawling import BatchCrawler, crawl
 from chat.classify_analysis import classify_whether_analysis
 from chat.extract_info import extract_ticker_and_period
 from chat.chat_request_model import ChatRequest, build_chat_request
@@ -56,19 +56,20 @@ def getAnswerWithAnalysis(request: ChatRequest):
     print("메서드 진입", flush=True)
     news_list = getNews(request)
     print("뉴스 조회 완료", flush=True)
-    batchCrawler = BatchCrawler(headless=True)
+    #batchCrawler = BatchCrawler(headless=True)
     resultDict = {}
     for news in news_list:
         url = news["url"]
         print("크롤링 시작", flush=True)
-        result = batchCrawler.crawl(url)
+        #result = batchCrawler.crawl(url)
+        result =  crawl(url)
         print("크롤링 완료", flush=True)
         resultDict[url] = {
             "content" : result,
             "image_url" : news["image_url"]
         }
         time.sleep(0.5)
-    batchCrawler.close()
+    #batchCrawler.close()
     return analyzeAndAnswer(request.question, resultDict)
     
 
