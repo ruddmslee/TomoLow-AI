@@ -58,7 +58,9 @@ def getAnswerWithAnalysis(request: ChatRequest):
     resultDict = {}
     for news in news_list:
         url = news["url"]
+        print("크롤링 시작")
         result = batchCrawler.crawl(url, max_wait=3)
+        print("크롤링 완료")
         resultDict[url] = {
             "content" : result,
             "image_url" : news["image_url"]
