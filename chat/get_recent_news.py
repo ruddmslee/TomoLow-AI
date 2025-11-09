@@ -3,6 +3,7 @@ from datetime import date, timedelta
 import os
 from dotenv import load_dotenv
 import requests
+from chat.batch_translate import batchTranslate, create_batch_translate_request
 
 load_dotenv()
 key = os.getenv("CRYPTONEWS_API_KEY")
@@ -30,13 +31,21 @@ def getRecentNews(ticker : str):
         print("'data' key not found. API response : ", data)
         return []
     
+    # 제목이 존재하는 것만 필터링
+    valid_items = [item for item in data["data"] if item.get("title")]
+
+    # 제목 번역
+    title_list = [ item.get("title") for item in valid_items ]
+    translated_titles = batchTranslate(create_batch_translate_request(title_list))["translations"]
+
     news_list = [
         {
             "url" : item["news_url"],
             "image_url" : item.get("image_url"),
-            "source_name" : item.get("source_name")
+            "source_name" : item.get("source_name"),
+            "title" : translated_titles[idx]
         }
-        for item in data["data"]
+        for idx, item in enumerate(valid_items)
     ]
     
     return news_list
