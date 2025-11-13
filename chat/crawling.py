@@ -198,19 +198,19 @@ def crawl(url, headless=True, proxy=None):
     finally:
         driver.quit()
 
-# # ===== 여러 URL 크롤링 =====
-# class BatchCrawler:
+# ===== 여러 URL 크롤링 =====
+class BatchCrawler:
     
-#     # 드라이버 재사용
-#     def __init__(self, headless=True, proxy=None):
-#         self.driver = get_driver(headless=headless, proxy=proxy)
+    # 드라이버 재사용
+    def __init__(self, headless=True, proxy=None):
+        self.driver = get_driver(headless=headless, proxy=proxy)
     
-#     def crawl(self, url):
-#         return crawl_with_driver(self.driver, url)
+    def crawl(self, url):
+        return crawl_with_driver(self.driver, url)
     
-#     def close(self):
-#         try:
-#             self.driver.quit()
-#         except:
-#             pass
+    def close(self):
+        try:
+            self.driver.quit()
+        except:
+            pass
 
