@@ -45,10 +45,12 @@ def get_driver(headless=True, proxy=None, block_images=True):
     options.page_load_strategy = "eager"
     
     # Docker 필수 옵션
+    options.add_argument("--disable-software-rasterizer")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-gpu")
     options.add_argument("--remote-debugging-port=9222")
+    options.add_argument("--single-process")
     
     # 봇 탐지 회피 (navigator.webdriver = true 숨김)
     options.add_argument("--disable-blink-features=AutomationControlled")
@@ -83,14 +85,17 @@ def get_driver(headless=True, proxy=None, block_images=True):
     driver = webdriver.Chrome(service=service, options=options)
     
     # Stealth 패치
-    driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
-        "source": """
-            Object.defineProperty(navigator, 'webdriver', {get: () => undefined});
-            window.chrome = {runtime: {}, app: {}};
-            Object.defineProperty(navigator, 'plugins', {get: () => [1, 2, 3, 4, 5]});
-            Object.defineProperty(navigator, 'languages', {get: () => ['en-US', 'en']});
-        """
-    })
+    try:
+        driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
+            "source": """
+                Object.defineProperty(navigator, 'webdriver', {get: () => undefined});
+                window.chrome = {runtime: {}, app: {}};
+                Object.defineProperty(navigator, 'plugins', {get: () => [1, 2, 3, 4, 5]});
+                Object.defineProperty(navigator, 'languages', {get: () => ['en-US', 'en']});
+            """
+        })
+    except Exception:
+        pass
     
     return driver
 
@@ -193,19 +198,19 @@ def crawl(url, headless=True, proxy=None):
     finally:
         driver.quit()
 
-# ===== 여러 URL 크롤링 =====
-class BatchCrawler:
+# # ===== 여러 URL 크롤링 =====
+# class BatchCrawler:
     
-    # 드라이버 재사용
-    def __init__(self, headless=True, proxy=None):
-        self.driver = get_driver(headless=headless, proxy=proxy)
+#     # 드라이버 재사용
+#     def __init__(self, headless=True, proxy=None):
+#         self.driver = get_driver(headless=headless, proxy=proxy)
     
-    def crawl(self, url):
-        return crawl_with_driver(self.driver, url)
+#     def crawl(self, url):
+#         return crawl_with_driver(self.driver, url)
     
-    def close(self):
-        try:
-            self.driver.quit()
-        except:
-            pass
+#     def close(self):
+#         try:
+#             self.driver.quit()
+#         except:
+#             pass
 
